@@ -1,0 +1,100 @@
+{
+    "sections": [
+        {
+            "id": "hero",
+            "title": "Hero Section",
+            "content": {
+                "heading": "Bring life to your space with plants",
+                "subheading": "Learn how to care for your indoor plants with our expert guides and simple tips.",
+                "buttonText": "Get Started",
+                "image": "https://images.unsplash.com/photo-1463320898484-cdee8141c787?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80"
+            }
+        },
+        {
+            "id": "about",
+            "title": "About Section",
+            "content": {
+                "heading": "About Verdant",
+                "paragraphs": [
+                    "We believe that everyone deserves to enjoy the beauty and benefits of plants, regardless of experience level.",
+                    "Our mission is to make plant care accessible, enjoyable, and rewarding."
+                ],
+                "buttonText": "Learn More",
+                "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80"
+            }
+        },
+        {
+            "id": "care-guides",
+            "title": "Care Guides Section",
+            "content": {
+                "guides": [
+                    {
+                        "title": "Watering",
+                        "description": "Learn the art of proper watering - when, how much, and how often for different types of plants.",
+                        "image": "https://images.unsplash.com/photo-1618498732743-b9907abfdf83?q=80&w=1170&auto=format&fit=crop"
+                    },
+                    {
+                        "title": "Light Requirements",
+                        "description": "Discover how to place your plants to give them the perfect amount of sunlight they need.",
+                        "image": "https://images.unsplash.com/photo-1592150621744-aca64f48394a?q=80&w=1170&auto=format&fit=crop"
+                    },
+                    {
+                        "title": "Soil & Fertilizers",
+                        "description": "Understanding the right soil and nutrients that will help your plants flourish all year long.",
+                        "image": "https://images.unsplash.com/photo-1566836610593-62a64888a216?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "tips",
+            "title": "Expert Tips Section",
+            "content": {
+                "tips": [
+                    {
+                        "title": "Rotate Your Plants Regularly",
+                        "description": "Plants grow toward light sources, so rotate them a quarter turn weekly to keep them growing evenly and balanced."
+                    },
+                    {
+                        "title": "Use Room Temperature Water",
+                        "description": "Cold water can shock plant roots. Always use room temperature water for a happier, healthier plant."
+                    },
+                    {
+                        "title": "Clean Those Leaves",
+                        "description": "Dusty leaves can block sunlight and prevent proper photosynthesis. Wipe them gently with a damp cloth monthly."
+                    },
+                    {
+                        "title": "Group Plants Together",
+                        "description": "Plants grouped together create a microclimate with higher humidity, which benefits most houseplants."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "testimonials",
+            "title": "Testimonials Section",
+            "content": {
+                "testimonials": [
+                    {
+                        "name": "Sarah J.",
+                        "role": "Plant Parent of 15",
+                        "quote": "The watering guide completely changed how I care for my plants. My fiddle leaf fig that was struggling is now thriving with new leaves!",
+                        "image": "https://randomuser.me/api/portraits/women/45.jpg"
+                    },
+                    {
+                        "name": "Michael T.",
+                        "role": "Apartment Gardener",
+                        "quote": "As a beginner, I was killing every plant I brought home. The simple tips on this site helped me create a thriving indoor jungle in just months.",
+                        "image": "https://randomuser.me/api/portraits/men/32.jpg"
+                    },
+                    {
+                        "name": "Elena R.",
+                        "role": "Office Plant Enthusiast",
+                        "quote": "I've transformed our office with plants thanks to the lighting recommendations. Everyone comments on how much more peaceful and productive the space feels now.",
+                        "image": "https://randomuser.me/api/portraits/women/68.jpg"
+                    }
+                ]
+            }
+        }
+    ]
+}

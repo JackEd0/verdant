@@ -17,24 +17,31 @@ document.addEventListener('DOMContentLoaded', function () {
   // Populate form with data
   function populateForm(data) {
     if (data.hero) {
-      document.getElementById('hero-title').value = data.hero.title || '';
-      document.getElementById('hero-description').value = data.hero.description || '';
+      document.getElementById('hero-heading').value = data.hero.title || '';
+      document.getElementById('hero-subheading').value = data.hero.description || '';
+      document.getElementById('hero-button-text').value = data.hero.buttonText || '';
       document.getElementById('hero-image').value = data.hero.imageUrl || '';
     }
 
     if (data.about) {
-      document.getElementById('about-title').value = data.about.title || '';
-      document.getElementById('about-content').value = data.about.content || '';
+      document.getElementById('about-heading').value = data.about.title || '';
+
+      // Handle the about content in the textarea
+      if (data.about.paragraphs && Array.isArray(data.about.paragraphs)) {
+        // Join paragraphs with newlines for the textarea
+        document.getElementById('about-content').value = data.about.paragraphs.join('\n\n');
+      } else if (data.about.content) {
+        document.getElementById('about-content').value = data.about.content;
+      }
+
+      document.getElementById('about-button-text').value = data.about.buttonText || '';
       document.getElementById('about-image').value = data.about.imageUrl || '';
     }
 
     if (data.guides) {
-      document.getElementById('guides-title').value = data.guides.title || '';
-      document.getElementById('guides-description').value = data.guides.description || '';
+      document.getElementById('guides-heading').value = data.guides.title || '';
+      document.getElementById('guides-subheading').value = data.guides.description || '';
     }
-
-    // Initialize preview with the same data
-    updatePreview();
   }
 
   // Default data for initial display
@@ -43,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
       hero: {
         title: 'Bring life to your space with plants',
         description: 'Learn how to care for your indoor plants with our expert guides and simple tips.',
+        buttonText: 'Get Started',
         imageUrl:
           'https://images.unsplash.com/photo-1463320898484-cdee8141c787?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
       },
@@ -50,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
         title: 'About Verdant',
         content:
           'We believe that everyone deserves to enjoy the beauty and benefits of plants, regardless of experience level. Our mission is to make plant care accessible, enjoyable, and rewarding.',
+        buttonText: 'Learn More',
         imageUrl:
           'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
       },
@@ -60,62 +69,6 @@ document.addEventListener('DOMContentLoaded', function () {
     };
   }
 
-  // Update preview based on current form values
-  function updatePreview() {
-    // Update Hero section
-    const heroTitle = document.getElementById('hero-title').value;
-    const heroDescription = document.getElementById('hero-description').value;
-    const heroImage = document.getElementById('hero-image').value;
-
-    document.getElementById('preview-hero-title').innerHTML = heroTitle
-      ? formatTitle(heroTitle)
-      : 'Bring <span class="text-primary font-medium">life</span> to your space with plants';
-    document.getElementById('preview-hero-description').textContent =
-      heroDescription || 'Learn how to care for your indoor plants with our expert guides and simple tips.';
-
-    if (heroImage) {
-      document.getElementById('preview-hero-image').src = heroImage;
-    }
-
-    // Update About section
-    const aboutTitle = document.getElementById('about-title').value;
-    const aboutContent = document.getElementById('about-content').value;
-    const aboutImage = document.getElementById('about-image').value;
-
-    document.getElementById('preview-about-title').innerHTML = aboutTitle
-      ? formatTitle(aboutTitle)
-      : 'About <span class="text-primary font-medium">Verdant</span>';
-    document.getElementById('preview-about-content').textContent =
-      aboutContent ||
-      'We believe that everyone deserves to enjoy the beauty and benefits of plants, regardless of experience level. Our mission is to make plant care accessible, enjoyable, and rewarding.';
-
-    if (aboutImage) {
-      document.getElementById('preview-about-image').src = aboutImage;
-    }
-
-    // Update Guides section
-    const guidesTitle = document.getElementById('guides-title').value;
-    const guidesDescription = document.getElementById('guides-description').value;
-
-    document.getElementById('preview-guides-title').innerHTML = guidesTitle
-      ? formatTitle(guidesTitle)
-      : 'Essential <span class="text-primary font-medium">Care Guides</span>';
-    document.getElementById('preview-guides-description').textContent =
-      guidesDescription || 'Everything you need to know to keep your plants thriving';
-  }
-
-  // Helper to format titles with highlighting
-  function formatTitle(title) {
-    // Look for words to highlight between * characters, like *word*
-    return title.replace(/\*(.*?)\*/g, '<span class="text-primary font-medium">$1</span>');
-  }
-
-  // Add real-time preview for all form fields
-  const formInputs = form.querySelectorAll('input, textarea');
-  formInputs.forEach((input) => {
-    input.addEventListener('input', updatePreview);
-  });
-
   // Handle form submission
   form.addEventListener('submit', function (event) {
     event.preventDefault();
@@ -123,18 +76,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // Create data object from form values
     const formData = {
       hero: {
-        title: document.getElementById('hero-title').value,
-        description: document.getElementById('hero-description').value,
+        title: document.getElementById('hero-heading').value,
+        description: document.getElementById('hero-subheading').value,
+        buttonText: document.getElementById('hero-button-text').value,
         imageUrl: document.getElementById('hero-image').value,
       },
       about: {
-        title: document.getElementById('about-title').value,
-        content: document.getElementById('about-content').value,
+        title: document.getElementById('about-heading').value,
+        // Handle content collection based on your implementation
+        buttonText: document.getElementById('about-button-text').value,
         imageUrl: document.getElementById('about-image').value,
       },
       guides: {
-        title: document.getElementById('guides-title').value,
-        description: document.getElementById('guides-description').value,
+        title: document.getElementById('guides-heading').value,
+        description: document.getElementById('guides-subheading').value,
       },
     };
 

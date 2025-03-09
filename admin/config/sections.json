@@ -17,7 +17,8 @@
                 "heading": "About Verdant",
                 "paragraphs": [
                     "We believe that everyone deserves to enjoy the beauty and benefits of plants, regardless of experience level.",
-                    "Our mission is to make plant care accessible, enjoyable, and rewarding."
+                    "Our mission is to make plant care accessible, enjoyable, and rewarding.",
+                    "Founded by a team of horticulture experts and plant enthusiasts, Verdant provides scientifically-based care advice while keeping things simple enough for beginners."
                 ],
                 "buttonText": "Learn More",
                 "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80"
@@ -27,6 +28,8 @@
             "id": "care-guides",
             "title": "Care Guides Section",
             "content": {
+                "heading": "Essential Care Guides",
+                "subheading": "Everything you need to know to keep your plants thriving",
                 "guides": [
                     {
                         "title": "Watering",
@@ -50,6 +53,8 @@
             "id": "tips",
             "title": "Expert Tips Section",
             "content": {
+                "heading": "Expert Tips & Tricks",
+                "subheading": "Simple solutions to common plant problems",
                 "tips": [
                     {
                         "title": "Rotate Your Plants Regularly",
@@ -71,9 +76,21 @@
             }
         },
         {
+            "id": "newsletter",
+            "title": "Newsletter Section",
+            "content": {
+                "heading": "Join Our Plant Community",
+                "description": "Sign up for our newsletter to receive seasonal care tips, exclusive guides, and plant inspiration.",
+                "buttonText": "Subscribe",
+                "inputPlaceholder": "Your email address"
+            }
+        },
+        {
             "id": "testimonials",
             "title": "Testimonials Section",
             "content": {
+                "heading": "What Our Community Says",
+                "subheading": "Hear from plant lovers who've transformed their spaces",
                 "testimonials": [
                     {
                         "name": "Sarah J.",

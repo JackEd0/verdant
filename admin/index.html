@@ -60,66 +60,198 @@
                 <form id="customization-form" class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-xl font-medium mb-6 pb-2 border-b border-gray-200">Customize Sections</h2>
 
+                    <!-- Section selector -->
+                    <div class="mb-6">
+                        <label for="section-selector" class="block text-sm font-medium mb-1 text-gray-700">Select Section to Edit:</label>
+                        <select id="section-selector" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="hero">Hero Section</option>
+                            <option value="about">About Section</option>
+                            <option value="care-guides">Care Guides Section</option>
+                            <option value="tips">Expert Tips Section</option>
+                            <option value="newsletter">Newsletter Section</option>
+                            <option value="testimonials">Testimonials Section</option>
+                        </select>
+                    </div>
+
                     <!-- Hero Section -->
-                    <div class="mb-8">
+                    <div id="hero-section-form" class="section-form mb-8">
                         <h3 class="text-lg font-medium mb-4 text-primary-light">Hero Section</h3>
 
                         <div class="mb-4">
-                            <label for="hero-title" class="block text-sm font-medium mb-1 text-gray-700">Title:</label>
-                            <input type="text" id="hero-title" name="hero-title" placeholder="Enter hero title"
+                            <label for="hero-heading" class="block text-sm font-medium mb-1 text-gray-700">Heading:</label>
+                            <input type="text" id="hero-heading" name="hero-heading" placeholder="Enter hero heading"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
 
                         <div class="mb-4">
-                            <label for="hero-description" class="block text-sm font-medium mb-1 text-gray-700">Description:</label>
-                            <textarea id="hero-description" name="hero-description" placeholder="Enter hero description" rows="3"
+                            <label for="hero-subheading" class="block text-sm font-medium mb-1 text-gray-700">Subheading:</label>
+                            <textarea id="hero-subheading" name="hero-subheading" placeholder="Enter hero subheading" rows="2"
                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="hero-button-text" class="block text-sm font-medium mb-1 text-gray-700">Button Text:</label>
+                            <input type="text" id="hero-button-text" name="hero-button-text" placeholder="Enter button text"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
 
                         <div class="mb-4">
                             <label for="hero-image" class="block text-sm font-medium mb-1 text-gray-700">Image URL:</label>
                             <input type="text" id="hero-image" name="hero-image" placeholder="Enter image URL"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <div class="mt-2">
+                                <div id="hero-image-preview" class="bg-gray-100 h-40 rounded-md flex items-center justify-center overflow-hidden">
+                                    <span class="text-gray-400">Image preview will appear here</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- About Section -->
-                    <div class="mb-8">
+                    <div id="about-section-form" class="section-form mb-8 hidden">
                         <h3 class="text-lg font-medium mb-4 text-primary-light">About Section</h3>
 
                         <div class="mb-4">
-                            <label for="about-title" class="block text-sm font-medium mb-1 text-gray-700">Title:</label>
-                            <input type="text" id="about-title" name="about-title" placeholder="Enter about title"
+                            <label for="about-heading" class="block text-sm font-medium mb-1 text-gray-700">Heading:</label>
+                            <input type="text" id="about-heading" name="about-heading" placeholder="Enter about heading"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
 
-                        <div class="mb-4">
-                            <label for="about-content" class="block text-sm font-medium mb-1 text-gray-700">Content:</label>
-                            <textarea id="about-content" name="about-content" placeholder="Enter about content" rows="4"
-                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                        <div id="about-paragraphs-container">
+                            <label class="block text-sm font-medium mb-2 text-gray-700">Paragraphs:</label>
+                            <div class="space-y-3" id="about-paragraphs-list">
+                                <!-- Paragraphs will be added dynamically here -->
+                            </div>
+                            <button type="button" id="add-paragraph-btn" class="mt-2 text-sm bg-accent hover:bg-accent/80 text-primary font-medium py-1 px-3 rounded">
+                                + Add Paragraph
+                            </button>
+                        </div>
+
+                        <div class="mb-4 mt-4">
+                            <label for="about-button-text" class="block text-sm font-medium mb-1 text-gray-700">Button Text:</label>
+                            <input type="text" id="about-button-text" name="about-button-text" placeholder="Enter button text"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
 
                         <div class="mb-4">
                             <label for="about-image" class="block text-sm font-medium mb-1 text-gray-700">Image URL:</label>
                             <input type="text" id="about-image" name="about-image" placeholder="Enter about image URL"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <div class="mt-2">
+                                <div id="about-image-preview" class="bg-gray-100 h-40 rounded-md flex items-center justify-center overflow-hidden">
+                                    <span class="text-gray-400">Image preview will appear here</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Care Guides Section -->
-                    <div class="mb-8">
+                    <div id="care-guides-section-form" class="section-form mb-8 hidden">
                         <h3 class="text-lg font-medium mb-4 text-primary-light">Care Guides Section</h3>
 
                         <div class="mb-4">
-                            <label for="guides-title" class="block text-sm font-medium mb-1 text-gray-700">Title:</label>
-                            <input type="text" id="guides-title" name="guides-title" placeholder="Enter guides title"
+                            <label for="guides-heading" class="block text-sm font-medium mb-1 text-gray-700">Heading:</label>
+                            <input type="text" id="guides-heading" name="guides-heading" placeholder="Enter guides heading"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
 
                         <div class="mb-4">
-                            <label for="guides-description" class="block text-sm font-medium mb-1 text-gray-700">Description:</label>
-                            <textarea id="guides-description" name="guides-description" placeholder="Enter guides description" rows="2"
+                            <label for="guides-subheading" class="block text-sm font-medium mb-1 text-gray-700">Subheading:</label>
+                            <textarea id="guides-subheading" name="guides-subheading" placeholder="Enter guides subheading" rows="2"
                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2 text-gray-700">Guides:</label>
+                            <div id="guides-list" class="space-y-6">
+                                <!-- Guides will be added dynamically here -->
+                            </div>
+                            <button type="button" id="add-guide-btn" class="mt-3 text-sm bg-accent hover:bg-accent/80 text-primary font-medium py-1 px-3 rounded">
+                                + Add Guide
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Expert Tips Section -->
+                    <div id="tips-section-form" class="section-form mb-8 hidden">
+                        <h3 class="text-lg font-medium mb-4 text-primary-light">Expert Tips Section</h3>
+
+                        <div class="mb-4">
+                            <label for="tips-heading" class="block text-sm font-medium mb-1 text-gray-700">Heading:</label>
+                            <input type="text" id="tips-heading" name="tips-heading" placeholder="Enter tips heading"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="tips-subheading" class="block text-sm font-medium mb-1 text-gray-700">Subheading:</label>
+                            <textarea id="tips-subheading" name="tips-subheading" placeholder="Enter tips subheading" rows="2"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2 text-gray-700">Tips:</label>
+                            <div id="tips-list" class="space-y-6">
+                                <!-- Tips will be added dynamically here -->
+                            </div>
+                            <button type="button" id="add-tip-btn" class="mt-3 text-sm bg-accent hover:bg-accent/80 text-primary font-medium py-1 px-3 rounded">
+                                + Add Tip
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Newsletter Section -->
+                    <div id="newsletter-section-form" class="section-form mb-8 hidden">
+                        <h3 class="text-lg font-medium mb-4 text-primary-light">Newsletter Section</h3>
+
+                        <div class="mb-4">
+                            <label for="newsletter-heading" class="block text-sm font-medium mb-1 text-gray-700">Heading:</label>
+                            <input type="text" id="newsletter-heading" name="newsletter-heading" placeholder="Enter newsletter heading"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="newsletter-description" class="block text-sm font-medium mb-1 text-gray-700">Description:</label>
+                            <textarea id="newsletter-description" name="newsletter-description" placeholder="Enter newsletter description" rows="3"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="newsletter-button-text" class="block text-sm font-medium mb-1 text-gray-700">Button Text:</label>
+                            <input type="text" id="newsletter-button-text" name="newsletter-button-text" placeholder="Enter button text"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="newsletter-placeholder" class="block text-sm font-medium mb-1 text-gray-700">Input Placeholder:</label>
+                            <input type="text" id="newsletter-placeholder" name="newsletter-placeholder" placeholder="Enter input placeholder text"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <!-- Testimonials Section -->
+                    <div id="testimonials-section-form" class="section-form mb-8 hidden">
+                        <h3 class="text-lg font-medium mb-4 text-primary-light">Testimonials Section</h3>
+
+                        <div class="mb-4">
+                            <label for="testimonials-heading" class="block text-sm font-medium mb-1 text-gray-700">Heading:</label>
+                            <input type="text" id="testimonials-heading" name="testimonials-heading" placeholder="Enter testimonials heading"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="testimonials-subheading" class="block text-sm font-medium mb-1 text-gray-700">Subheading:</label>
+                            <textarea id="testimonials-subheading" name="testimonials-subheading" placeholder="Enter testimonials subheading" rows="2"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2 text-gray-700">Testimonials:</label>
+                            <div id="testimonials-list" class="space-y-6">
+                                <!-- Testimonials will be added dynamically here -->
+                            </div>
+                            <button type="button" id="add-testimonial-btn" class="mt-3 text-sm bg-accent hover:bg-accent/80 text-primary font-medium py-1 px-3 rounded">
+                                + Add Testimonial
+                            </button>
                         </div>
                     </div>
 
@@ -143,59 +275,5 @@
     </div>
 
     <script src="assets/js/admin.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const defaultViewBtn = document.getElementById('default-view');
-            const editorViewBtn = document.getElementById('editor-view');
-            const previewViewBtn = document.getElementById('preview-view');
-
-            const formSection = document.getElementById('form-section');
-            const previewSectionContainer = document.getElementById('preview-section-container');
-            const layoutContainer = document.getElementById('layout-container');
-
-            // Function to set active button styles
-            function setActiveButton(activeBtn) {
-                // Reset all buttons
-                [defaultViewBtn, editorViewBtn, previewViewBtn].forEach(btn => {
-                    btn.classList.remove('bg-primary', 'text-white');
-                    btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-100');
-                });
-
-                // Set active button
-                activeBtn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-100');
-                activeBtn.classList.add('bg-primary', 'text-white');
-            }
-
-            // Default view (both panels)
-            defaultViewBtn.addEventListener('click', function() {
-                formSection.classList.remove('lg:w-full', 'hidden');
-                previewSectionContainer.classList.remove('lg:w-full', 'hidden');
-                formSection.classList.add('lg:w-1/2');
-                previewSectionContainer.classList.add('lg:w-1/2');
-                layoutContainer.classList.add('lg:flex-row');
-                setActiveButton(defaultViewBtn);
-            });
-
-            // Editor-only view
-            editorViewBtn.addEventListener('click', function() {
-                formSection.classList.remove('lg:w-1/2', 'hidden');
-                formSection.classList.add('lg:w-full');
-                previewSectionContainer.classList.add('hidden');
-                previewSectionContainer.classList.remove('lg:w-1/2', 'lg:w-full');
-                layoutContainer.classList.remove('lg:flex-row');
-                setActiveButton(editorViewBtn);
-            });
-
-            // Preview-only view
-            previewViewBtn.addEventListener('click', function() {
-                previewSectionContainer.classList.remove('lg:w-1/2', 'hidden');
-                previewSectionContainer.classList.add('lg:w-full');
-                formSection.classList.add('hidden');
-                formSection.classList.remove('lg:w-1/2', 'lg:w-full');
-                layoutContainer.classList.remove('lg:flex-row');
-                setActiveButton(previewViewBtn);
-            });
-        });
-    </script>
 </body>
 </html>

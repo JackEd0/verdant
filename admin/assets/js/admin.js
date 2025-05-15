@@ -234,6 +234,17 @@ document.addEventListener('DOMContentLoaded', function () {
     if (testimonial.image) clone.querySelector('.testimonial-image').value = testimonial.image;
 
     testimonialsList.appendChild(clone);
+
+    // Set up the image preview if image URL is provided
+    if (testimonial.image) {
+      const addedTestimonialItem = testimonialsList.lastElementChild;
+      const previewContainer = addedTestimonialItem.querySelector('.testimonial-image-preview');
+
+      if (previewContainer) {
+        previewImage(testimonial.image, previewContainer);
+      }
+    }
+
     return clone;
   }
 
@@ -249,6 +260,17 @@ document.addEventListener('DOMContentLoaded', function () {
     if (guide.image) clone.querySelector('.guide-image').value = guide.image;
 
     guidesList.appendChild(clone);
+
+    // Set up the image preview if image URL is provided
+    if (guide.image) {
+      const addedGuideItem = guidesList.lastElementChild;
+      const previewContainer = addedGuideItem.querySelector('.guide-image-preview');
+
+      if (previewContainer) {
+        previewImage(guide.image, previewContainer);
+      }
+    }
+
     return clone;
   }
 
@@ -290,6 +312,27 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
     });
+
+    // Initialize image previews for testimonial items
+    document.querySelectorAll('.testimonial-item:not(template .testimonial-item)').forEach(testimonialItem => {
+      const imageInput = testimonialItem.querySelector('.testimonial-image');
+      const previewContainer = testimonialItem.querySelector('.testimonial-image-preview');
+
+      // Show preview on load if there's a value
+      if (imageInput && previewContainer && imageInput.value.trim()) {
+        previewImage(imageInput.value, previewContainer);
+      }
+
+      // Add event listener for input changes
+      if (imageInput && previewContainer) {
+        if (!imageInput.hasChangeListener) {
+          imageInput.hasChangeListener = true;
+          imageInput.addEventListener('input', function() {
+            previewImage(this.value, previewContainer);
+          });
+        }
+      }
+    });
   }
 
   // Initialize event listeners for guides
@@ -301,6 +344,27 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function() {
           this.closest('.guide-item').remove();
         });
+      }
+    });
+
+    // Initialize image previews for guide items
+    document.querySelectorAll('.guide-item:not(template .guide-item)').forEach(guideItem => {
+      const imageInput = guideItem.querySelector('.guide-image');
+      const previewContainer = guideItem.querySelector('.guide-image-preview');
+
+      // Show preview on load if there's a value
+      if (imageInput && previewContainer && imageInput.value.trim()) {
+        previewImage(imageInput.value, previewContainer);
+      }
+
+      // Add event listener for input changes
+      if (imageInput && previewContainer) {
+        if (!imageInput.hasChangeListener) {
+          imageInput.hasChangeListener = true;
+          imageInput.addEventListener('input', function() {
+            previewImage(this.value, previewContainer);
+          });
+        }
       }
     });
   }
@@ -318,33 +382,57 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Helper function to create image previews
+  function previewImage(imageUrl, previewContainer) {
+    if (!previewContainer) return;
+    console.log('Previewing image:', imageUrl);
+
+    if (imageUrl && imageUrl.trim()) {
+      // Clear the container
+      previewContainer.innerHTML = '';
+
+      // Create image element
+      const img = document.createElement('img');
+      img.src = imageUrl.trim();
+      img.className = 'w-full h-full object-cover';
+      img.onerror = function() {
+        previewContainer.innerHTML = '<span class="text-red-500">Invalid image URL</span>';
+      };
+
+      previewContainer.appendChild(img);
+      return true;
+    } else {
+      previewContainer.innerHTML = '<span class="text-gray-400">Image preview will appear here</span>';
+      return false;
+    }
+  }
+
   // Initialize image preview functionality
   function initImagePreview() {
-    // For all preview image buttons
+    // For all preview image buttons (fixed elements)
     document.querySelectorAll('.preview-image-btn').forEach(button => {
+      const targetId = button.dataset.target;
+      const inputField = button.closest('div').querySelector('input');
+
+      // Add input listener for real-time updates
+      if (inputField) {
+        inputField.addEventListener('input', function() {
+          previewImage(this.value, document.getElementById(targetId));
+        });
+      }
+
+      // Show preview on button click
       button.addEventListener('click', function() {
-        const targetId = this.dataset.target;
         const inputField = this.closest('div').querySelector('input');
-        const imageUrl = inputField.value.trim();
-        const previewContainer = document.getElementById(targetId);
-
-        if (imageUrl) {
-          // Clear the container
-          previewContainer.innerHTML = '';
-
-          // Create image element
-          const img = document.createElement('img');
-          img.src = imageUrl;
-          img.className = 'w-full h-full object-cover';
-          img.onerror = function() {
-            previewContainer.innerHTML = '<span class="text-red-500">Invalid image URL</span>';
-          };
-
-          previewContainer.appendChild(img);
-        } else {
-          previewContainer.innerHTML = '<span class="text-gray-400">Image preview will appear here</span>';
+        if (inputField) {
+          previewImage(inputField.value, document.getElementById(targetId));
         }
       });
+
+      // Show preview on page load if there's a value
+      if (inputField && inputField.value.trim()) {
+        previewImage(inputField.value, document.getElementById(targetId));
+      }
     });
   }
 
@@ -679,7 +767,41 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Show selected section form
-    document.getElementById(`${selectedSection}-section-form`).classList.remove('hidden');
+    const selectedForm = document.getElementById(`${selectedSection}-section-form`);
+    selectedForm.classList.remove('hidden');
+
+    // Refresh image previews in the selected section
+    const refreshImagePreviews = () => {
+      // Refresh fixed image previews (hero, about, etc.)
+      selectedForm.querySelectorAll('.preview-image-btn').forEach(button => {
+        const targetId = button.dataset.target;
+        const inputField = button.closest('div').querySelector('input');
+        if (inputField && inputField.value.trim() && document.getElementById(targetId)) {
+          previewImage(inputField.value, document.getElementById(targetId));
+        }
+      });
+
+      // Refresh guide image previews
+      selectedForm.querySelectorAll('.guide-item:not(template .guide-item)').forEach(guideItem => {
+        const imageInput = guideItem.querySelector('.guide-image');
+        const previewContainer = guideItem.querySelector('.guide-image-preview');
+        if (imageInput && previewContainer && imageInput.value.trim()) {
+          previewImage(imageInput.value, previewContainer);
+        }
+      });
+
+      // Refresh testimonial image previews
+      selectedForm.querySelectorAll('.testimonial-item:not(template .testimonial-item)').forEach(testimonialItem => {
+        const imageInput = testimonialItem.querySelector('.testimonial-image');
+        const previewContainer = testimonialItem.querySelector('.testimonial-image-preview');
+        if (imageInput && previewContainer && imageInput.value.trim()) {
+          previewImage(imageInput.value, previewContainer);
+        }
+      });
+    };
+
+    // Use setTimeout to ensure the DOM is fully updated before refreshing previews
+    setTimeout(refreshImagePreviews, 0);
   });
 
   // Layout toggle functionality
@@ -746,12 +868,36 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('add-testimonial-btn').addEventListener('click', function() {
     const newTestimonial = addTestimonial();
     initTestimonialEventListeners();
+
+    // Add input event listener to the newly added testimonial's image input
+    const testimonialItem = document.getElementById('testimonials-list').lastElementChild;
+    if (testimonialItem) {
+      const imageInput = testimonialItem.querySelector('.testimonial-image');
+      const imagePreview = testimonialItem.querySelector('.testimonial-image-preview');
+      if (imageInput && imagePreview) {
+        imageInput.addEventListener('input', function() {
+          previewImage(this.value, imagePreview);
+        });
+      }
+    }
   });
 
   // Add guide button
   document.getElementById('add-guide-btn').addEventListener('click', function() {
     const newGuide = addGuide();
     initGuideEventListeners();
+
+    // Add input event listener to the newly added guide's image input
+    const guideItem = document.getElementById('guides-list').lastElementChild;
+    if (guideItem) {
+      const imageInput = guideItem.querySelector('.guide-image');
+      const imagePreview = guideItem.querySelector('.guide-image-preview');
+      if (imageInput && imagePreview) {
+        imageInput.addEventListener('input', function() {
+          previewImage(this.value, imagePreview);
+        });
+      }
+    }
   });
 
   // Add tip button

@@ -1,23 +1,42 @@
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('customization-form');
+  // Store the current site data globally
+  let currentSiteData = {};
+
+  // Initialize image preview functionality
+  initImagePreview();
 
   // Load existing site data
   fetch('config/site.json')
     .then((response) => response.json())
     .then((data) => {
+      currentSiteData = data;
       populateForm(data);
+
+      // Populate the raw JSON editor
+      document.getElementById('raw-json-editor').value = JSON.stringify(data, null, 2);
     })
     .catch((error) => {
       console.error('Error loading section data:', error);
       // Use default data if fetch fails
       const defaultData = getDefaultData();
+      currentSiteData = defaultData;
       populateForm(defaultData);
+
+      // Populate the raw JSON editor with default data
+      document.getElementById('raw-json-editor').value = JSON.stringify(defaultData, null, 2);
     });
 
   // Populate form with data
   function populateForm(data) {
     // Check if data is in the expected structure
     const sections = data.sections || [];
+
+    // Populate navigation (if exists)
+    if (data.navigation) {
+      document.getElementById('nav-brand').value = data.navigation.brand || '';
+      populateNavItems(data.navigation.items || []);
+    }
 
     // Find each section by id and populate corresponding form fields
     const heroSection = sections.find(section => section.id === 'hero');
@@ -48,10 +67,45 @@ document.addEventListener('DOMContentLoaded', function () {
     if (guidesSection && guidesSection.content) {
       document.getElementById('guides-heading').value = guidesSection.content.heading || '';
       document.getElementById('guides-subheading').value = guidesSection.content.subheading || '';
+
+      // Populate guides list
+      if (guidesSection.content.guides && Array.isArray(guidesSection.content.guides)) {
+        populateGuides(guidesSection.content.guides);
+      }
     }
 
-    // Populate section selector
-    populateSectionSelector(sections);
+    const tipsSection = sections.find(section => section.id === 'tips');
+    if (tipsSection && tipsSection.content) {
+      document.getElementById('tips-heading').value = tipsSection.content.heading || '';
+      document.getElementById('tips-subheading').value = tipsSection.content.subheading || '';
+
+      // Populate tips list
+      if (tipsSection.content.tips && Array.isArray(tipsSection.content.tips)) {
+        populateTips(tipsSection.content.tips);
+      }
+    }
+
+    const newsletterSection = sections.find(section => section.id === 'newsletter');
+    if (newsletterSection && newsletterSection.content) {
+      document.getElementById('newsletter-heading').value = newsletterSection.content.heading || '';
+      document.getElementById('newsletter-description').value = newsletterSection.content.description || '';
+      document.getElementById('newsletter-button-text').value = newsletterSection.content.buttonText || '';
+      document.getElementById('newsletter-placeholder').value = newsletterSection.content.inputPlaceholder || '';
+    }
+
+    const testimonialsSection = sections.find(section => section.id === 'testimonials');
+    if (testimonialsSection && testimonialsSection.content) {
+      document.getElementById('testimonials-heading').value = testimonialsSection.content.heading || '';
+      document.getElementById('testimonials-subheading').value = testimonialsSection.content.subheading || '';
+
+      // Populate testimonials list
+      if (testimonialsSection.content.testimonials && Array.isArray(testimonialsSection.content.testimonials)) {
+        populateTestimonials(testimonialsSection.content.testimonials);
+      }
+    }
+
+    // Populate section selector with navigation too
+    populateSectionSelector([{id: 'navigation', title: 'Navigation Menu'}, ...sections]);
   }
 
   // Populate the section selector dropdown
@@ -69,6 +123,229 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Trigger change event to show the first section
     sectionSelector.dispatchEvent(new Event('change'));
+  }
+
+  // Populate navigation items
+  function populateNavItems(items) {
+    const navItemsList = document.getElementById('nav-items-list');
+    // Clear existing items except the template
+    Array.from(navItemsList.children).forEach(child => {
+      if (!child.matches('template')) {
+        child.remove();
+      }
+    });
+
+    // Add each navigation item
+    items.forEach(item => {
+      addNavItem(item.text, item.href, item.id);
+    });
+
+    // Initialize event listeners for the nav items
+    initNavItemEventListeners();
+  }
+
+  // Populate testimonials
+  function populateTestimonials(testimonials) {
+    const testimonialsList = document.getElementById('testimonials-list');
+    // Clear existing testimonials except the template
+    Array.from(testimonialsList.children).forEach(child => {
+      if (!child.matches('template')) {
+        child.remove();
+      }
+    });
+
+    // Add each testimonial
+    testimonials.forEach(testimonial => {
+      addTestimonial(testimonial);
+    });
+
+    // Initialize event listeners for testimonials
+    initTestimonialEventListeners();
+  }
+
+  // Populate guides
+  function populateGuides(guides) {
+    const guidesList = document.getElementById('guides-list');
+    // Clear existing guides except the template
+    Array.from(guidesList.children).forEach(child => {
+      if (!child.matches('template')) {
+        child.remove();
+      }
+    });
+
+    // Add each guide
+    guides.forEach(guide => {
+      addGuide(guide);
+    });
+
+    // Initialize event listeners for guides
+    initGuideEventListeners();
+  }
+
+  // Populate tips
+  function populateTips(tips) {
+    const tipsList = document.getElementById('tips-list');
+    // Clear existing tips except the template
+    Array.from(tipsList.children).forEach(child => {
+      if (!child.matches('template')) {
+        child.remove();
+      }
+    });
+
+    // Add each tip
+    tips.forEach(tip => {
+      addTip(tip);
+    });
+
+    // Initialize event listeners for tips
+    initTipEventListeners();
+  }
+
+  // Add a new navigation item
+  function addNavItem(text = '', href = '', id = '') {
+    const navItemsList = document.getElementById('nav-items-list');
+    const template = document.getElementById('nav-item-template');
+    const clone = document.importNode(template.content, true);
+
+    // Set values if provided
+    if (text) clone.querySelector('.nav-item-text').value = text;
+    if (href) clone.querySelector('.nav-item-href').value = href;
+    if (id) clone.querySelector('.nav-item-id').value = id;
+
+    // Generate a new ID if none provided
+    if (!id) {
+      clone.querySelector('.nav-item-id').value = 'nav-' + Date.now();
+    }
+
+    navItemsList.appendChild(clone);
+    return clone;
+  }
+
+  // Add a new testimonial
+  function addTestimonial(testimonial = {}) {
+    const testimonialsList = document.getElementById('testimonials-list');
+    const template = document.getElementById('testimonial-template');
+    const clone = document.importNode(template.content, true);
+
+    // Set values if provided
+    if (testimonial.name) clone.querySelector('.testimonial-name').value = testimonial.name;
+    if (testimonial.role) clone.querySelector('.testimonial-role').value = testimonial.role;
+    if (testimonial.quote) clone.querySelector('.testimonial-quote').value = testimonial.quote;
+    if (testimonial.image) clone.querySelector('.testimonial-image').value = testimonial.image;
+
+    testimonialsList.appendChild(clone);
+    return clone;
+  }
+
+  // Add a new guide
+  function addGuide(guide = {}) {
+    const guidesList = document.getElementById('guides-list');
+    const template = document.getElementById('guide-template');
+    const clone = document.importNode(template.content, true);
+
+    // Set values if provided
+    if (guide.title) clone.querySelector('.guide-title').value = guide.title;
+    if (guide.description) clone.querySelector('.guide-description').value = guide.description;
+    if (guide.image) clone.querySelector('.guide-image').value = guide.image;
+
+    guidesList.appendChild(clone);
+    return clone;
+  }
+
+  // Add a new tip
+  function addTip(tip = {}) {
+    const tipsList = document.getElementById('tips-list');
+    const template = document.getElementById('tip-template');
+    const clone = document.importNode(template.content, true);
+
+    // Set values if provided
+    if (tip.title) clone.querySelector('.tip-title').value = tip.title;
+    if (tip.description) clone.querySelector('.tip-description').value = tip.description;
+
+    tipsList.appendChild(clone);
+    return clone;
+  }
+
+  // Initialize event listeners for navigation items
+  function initNavItemEventListeners() {
+    // Remove navigation item
+    document.querySelectorAll('.remove-nav-item').forEach(button => {
+      if (!button.hasEventListener) {
+        button.hasEventListener = true;
+        button.addEventListener('click', function() {
+          this.closest('.nav-item').remove();
+        });
+      }
+    });
+  }
+
+  // Initialize event listeners for testimonials
+  function initTestimonialEventListeners() {
+    // Remove testimonial
+    document.querySelectorAll('.remove-testimonial').forEach(button => {
+      if (!button.hasEventListener) {
+        button.hasEventListener = true;
+        button.addEventListener('click', function() {
+          this.closest('.testimonial-item').remove();
+        });
+      }
+    });
+  }
+
+  // Initialize event listeners for guides
+  function initGuideEventListeners() {
+    // Remove guide
+    document.querySelectorAll('.remove-guide').forEach(button => {
+      if (!button.hasEventListener) {
+        button.hasEventListener = true;
+        button.addEventListener('click', function() {
+          this.closest('.guide-item').remove();
+        });
+      }
+    });
+  }
+
+  // Initialize event listeners for tips
+  function initTipEventListeners() {
+    // Remove tip
+    document.querySelectorAll('.remove-tip').forEach(button => {
+      if (!button.hasEventListener) {
+        button.hasEventListener = true;
+        button.addEventListener('click', function() {
+          this.closest('.tip-item').remove();
+        });
+      }
+    });
+  }
+
+  // Initialize image preview functionality
+  function initImagePreview() {
+    // For all preview image buttons
+    document.querySelectorAll('.preview-image-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const targetId = this.dataset.target;
+        const inputField = this.closest('div').querySelector('input');
+        const imageUrl = inputField.value.trim();
+        const previewContainer = document.getElementById(targetId);
+
+        if (imageUrl) {
+          // Clear the container
+          previewContainer.innerHTML = '';
+
+          // Create image element
+          const img = document.createElement('img');
+          img.src = imageUrl;
+          img.className = 'w-full h-full object-cover';
+          img.onerror = function() {
+            previewContainer.innerHTML = '<span class="text-red-500">Invalid image URL</span>';
+          };
+
+          previewContainer.appendChild(img);
+        } else {
+          previewContainer.innerHTML = '<span class="text-gray-400">Image preview will appear here</span>';
+        }
+      });
+    });
   }
 
   // Default data for initial display
@@ -134,15 +411,32 @@ document.addEventListener('DOMContentLoaded', function () {
   form.addEventListener('submit', async function (event) {
     event.preventDefault();
 
-    // Get the current site data
-    let currentData;
-    try {
-      const response = await fetch('config/site.json');
-      currentData = await response.json();
-    } catch (error) {
-      console.error('Error loading current data:', error);
-      currentData = getDefaultData();
+    // Check if the raw JSON editor has been changed
+    const rawJsonEditor = document.getElementById('raw-json-editor');
+    if (rawJsonEditor.value) {
+      try {
+        // Parse and validate the JSON
+        const updatedData = JSON.parse(rawJsonEditor.value);
+        saveData(updatedData);
+        return;
+      } catch (error) {
+        console.error('Invalid JSON:', error);
+        showStatusMessage('Invalid JSON format. Please check your syntax.', 'error');
+        return;
+      }
     }
+
+    // Otherwise, collect data from the form fields
+    // Get the current site data structure
+    let currentData = JSON.parse(JSON.stringify(currentSiteData)); // Deep clone to avoid reference issues
+    if (!currentData.sections) currentData.sections = [];
+
+    // Ensure navigation exists
+    if (!currentData.navigation) currentData.navigation = { items: [] };
+
+    // Update navigation
+    currentData.navigation.brand = document.getElementById('nav-brand').value;
+    currentData.navigation.items = collectNavItems();
 
     // Update the data with form values
     const sections = currentData.sections || [];
@@ -160,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const aboutIndex = sections.findIndex(section => section.id === 'about');
     if (aboutIndex >= 0) {
       sections[aboutIndex].content.heading = document.getElementById('about-heading').value;
-      sections[aboutIndex].content.paragraphs = document.getElementById('about-content').value.split('\n\n');
+      sections[aboutIndex].content.paragraphs = document.getElementById('about-content').value.split('\n\n').filter(p => p.trim());
       sections[aboutIndex].content.buttonText = document.getElementById('about-button-text').value;
       sections[aboutIndex].content.image = document.getElementById('about-image').value;
     }
@@ -170,38 +464,207 @@ document.addEventListener('DOMContentLoaded', function () {
     if (guidesIndex >= 0) {
       sections[guidesIndex].content.heading = document.getElementById('guides-heading').value;
       sections[guidesIndex].content.subheading = document.getElementById('guides-subheading').value;
+      sections[guidesIndex].content.guides = collectGuides();
     }
 
-    // Display save confirmation
-    saveData({ sections });
+    // Update Tips section
+    const tipsIndex = sections.findIndex(section => section.id === 'tips');
+    if (tipsIndex >= 0) {
+      sections[tipsIndex].content.heading = document.getElementById('tips-heading').value;
+      sections[tipsIndex].content.subheading = document.getElementById('tips-subheading').value;
+      sections[tipsIndex].content.tips = collectTips();
+    }
+
+    // Update Newsletter section
+    const newsletterIndex = sections.findIndex(section => section.id === 'newsletter');
+    if (newsletterIndex >= 0) {
+      sections[newsletterIndex].content.heading = document.getElementById('newsletter-heading').value;
+      sections[newsletterIndex].content.description = document.getElementById('newsletter-description').value;
+      sections[newsletterIndex].content.buttonText = document.getElementById('newsletter-button-text').value;
+      sections[newsletterIndex].content.inputPlaceholder = document.getElementById('newsletter-placeholder').value;
+    }
+
+    // Update Testimonials section
+    const testimonialsIndex = sections.findIndex(section => section.id === 'testimonials');
+    if (testimonialsIndex >= 0) {
+      sections[testimonialsIndex].content.heading = document.getElementById('testimonials-heading').value;
+      sections[testimonialsIndex].content.subheading = document.getElementById('testimonials-subheading').value;
+      sections[testimonialsIndex].content.testimonials = collectTestimonials();
+    }
+
+    // Update the current site data and save
+    currentData.sections = sections;
+    saveData(currentData);
   });
 
-  // Simulate saving data to the server
+  // Collect all navigation items
+  function collectNavItems() {
+    const items = [];
+    document.querySelectorAll('.nav-item:not(template .nav-item)').forEach(item => {
+      const text = item.querySelector('.nav-item-text').value;
+      const href = item.querySelector('.nav-item-href').value;
+      const id = item.querySelector('.nav-item-id').value;
+
+      if (text && href) {
+        items.push({
+          id: id || `nav-${Date.now()}`,
+          text,
+          href,
+          selector: `#${id || `nav-${Date.now()}`}`
+        });
+      }
+    });
+    return items;
+  }
+
+  // Collect all testimonial data
+  function collectTestimonials() {
+    const testimonials = [];
+    document.querySelectorAll('.testimonial-item:not(template .testimonial-item)').forEach((item, index) => {
+      const name = item.querySelector('.testimonial-name').value;
+      const role = item.querySelector('.testimonial-role').value;
+      const quote = item.querySelector('.testimonial-quote').value;
+      const image = item.querySelector('.testimonial-image').value;
+
+      if (name && quote) {
+        testimonials.push({
+          name,
+          role,
+          quote,
+          image,
+          selector: `#testimonial-${index + 1}`
+        });
+      }
+    });
+    return testimonials;
+  }
+
+  // Collect all guide data
+  function collectGuides() {
+    const guides = [];
+    document.querySelectorAll('.guide-item:not(template .guide-item)').forEach((item, index) => {
+      const title = item.querySelector('.guide-title').value;
+      const description = item.querySelector('.guide-description').value;
+      const image = item.querySelector('.guide-image').value;
+
+      if (title && description) {
+        guides.push({
+          title,
+          description,
+          image,
+          selector: `#guide-${title.toLowerCase().replace(/\s+/g, '-')}`
+        });
+      }
+    });
+    return guides;
+  }
+
+  // Collect all tip data
+  function collectTips() {
+    const tips = [];
+    document.querySelectorAll('.tip-item:not(template .tip-item)').forEach((item, index) => {
+      const title = item.querySelector('.tip-title').value;
+      const description = item.querySelector('.tip-description').value;
+
+      if (title && description) {
+        tips.push({
+          title,
+          description,
+          selector: `#tip-${index + 1}`
+        });
+      }
+    });
+    return tips;
+  }
+
+  // Show status message
+  function showStatusMessage(message, type = 'success') {
+    const statusMessage = document.getElementById('status-message');
+    statusMessage.textContent = message;
+    statusMessage.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+
+    if (type === 'error') {
+      statusMessage.classList.add('bg-red-100', 'text-red-800');
+    } else {
+      statusMessage.classList.add('bg-green-100', 'text-green-800');
+    }
+
+    // Hide the message after 3 seconds
+    setTimeout(() => {
+      statusMessage.classList.add('hidden');
+    }, 3000);
+  }
+
+  // Save data to site.json
   function saveData(data) {
     console.log('Saving data:', data);
 
-    // Add a success message
-    const saveMessage = document.createElement('div');
-    saveMessage.className = 'fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-md shadow-lg';
-    saveMessage.textContent = 'Changes saved successfully!';
-    document.body.appendChild(saveMessage);
+    // Update the global data reference
+    currentSiteData = data;
 
-    // Remove the message after 3 seconds
-    setTimeout(() => {
-      saveMessage.remove();
-    }, 3000);
+    // Update the raw JSON editor
+    document.getElementById('raw-json-editor').value = JSON.stringify(data, null, 2);
 
-    // In a real application, you would send this data to the server
-    // fetch('/save-config', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(data)
-    // }).then(response => response.json())
-    //   .then(result => console.log('Success:', result))
-    //   .catch(error => console.error('Error:', error));
+    // Send data to the server
+    fetch('save-config.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        file: 'config/site.json',
+        data: data
+      })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(result => {
+      console.log('Success:', result);
+      showStatusMessage('Changes saved successfully!');
+
+      // Refresh the preview iframe
+      const iframe = document.querySelector('#preview-section iframe');
+      if (iframe) {
+        iframe.src = iframe.src;
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showStatusMessage('Error saving changes. See console for details.', 'error');
+    });
   }
+
+  // Download the JSON configuration
+  document.getElementById('download-json-btn').addEventListener('click', function() {
+    // Get the current data
+    let dataToDownload;
+
+    try {
+      // First try to use the raw JSON editor content
+      const rawJsonEditor = document.getElementById('raw-json-editor');
+      dataToDownload = JSON.parse(rawJsonEditor.value);
+    } catch (error) {
+      // Fall back to the current site data
+      dataToDownload = currentSiteData;
+    }
+
+    // Create a download link
+    const dataStr = JSON.stringify(dataToDownload, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = 'site-config.json';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(url);
+  });
 
   // Section selector functionality
   const sectionSelector = document.getElementById('section-selector');
@@ -269,5 +732,31 @@ document.addEventListener('DOMContentLoaded', function () {
     formSection.classList.remove('lg:w-1/2', 'lg:w-full');
     layoutContainer.classList.remove('lg:flex-row');
     setActiveButton(previewViewBtn);
+  });
+
+  // Add event listeners for "Add" buttons
+
+  // Add navigation item button
+  document.getElementById('add-nav-item-btn').addEventListener('click', function() {
+    const newNavItem = addNavItem();
+    initNavItemEventListeners();
+  });
+
+  // Add testimonial button
+  document.getElementById('add-testimonial-btn').addEventListener('click', function() {
+    const newTestimonial = addTestimonial();
+    initTestimonialEventListeners();
+  });
+
+  // Add guide button
+  document.getElementById('add-guide-btn').addEventListener('click', function() {
+    const newGuide = addGuide();
+    initGuideEventListeners();
+  });
+
+  // Add tip button
+  document.getElementById('add-tip-btn').addEventListener('click', function() {
+    const newTip = addTip();
+    initTipEventListeners();
   });
 });

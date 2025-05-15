@@ -13,7 +13,7 @@ plant-care-admin
 │   └── js
 │       └── admin.js         # JavaScript functionality for the admin page
 ├── config
-│   └── sections.json        # Configuration for website sections
+│   └── site.json        # Configuration for website sections
 ├── uploads
 │   └── .gitkeep             # Keeps the uploads directory tracked by Git
 └── README.md                # Documentation for the project
@@ -21,13 +21,15 @@ plant-care-admin
 
 ## Setup Instructions
 
-1. **Clone the Repository**: 
+1. **Clone the Repository**:
    Clone this repository to your local machine using:
+
    ```
    git clone <repository-url>
    ```
 
 2. **Navigate to the Project Directory**:
+
    ```
    cd plant-care-admin
    ```
@@ -40,10 +42,10 @@ plant-care-admin
 
 ## Usage Guidelines
 
-- The `admin.html` file serves as the main interface for customization. 
+- The `admin.html` file serves as the main interface for customization.
 - The `assets/css/admin-styles.css` file contains styles specific to the admin page, ensuring a user-friendly layout.
 - The `assets/js/admin.js` file handles the dynamic functionality of the admin interface, including form submissions and AJAX calls.
-- The `config/sections.json` file stores the default values and settings for the website sections, which can be modified through the admin interface.
+- The `config/site.json` file stores the default values and settings for the website sections, which can be modified through the admin interface.
 
 ## Contributing
 

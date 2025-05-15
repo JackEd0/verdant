@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('customization-form');
 
-  // Load existing section data
-  fetch('config/sections.json')
+  // Load existing site data
+  fetch('config/site.json')
     .then((response) => response.json())
     .then((data) => {
       populateForm(data);
@@ -16,85 +16,164 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Populate form with data
   function populateForm(data) {
-    if (data.hero) {
-      document.getElementById('hero-heading').value = data.hero.title || '';
-      document.getElementById('hero-subheading').value = data.hero.description || '';
-      document.getElementById('hero-button-text').value = data.hero.buttonText || '';
-      document.getElementById('hero-image').value = data.hero.imageUrl || '';
+    // Check if data is in the expected structure
+    const sections = data.sections || [];
+
+    // Find each section by id and populate corresponding form fields
+    const heroSection = sections.find(section => section.id === 'hero');
+    if (heroSection && heroSection.content) {
+      document.getElementById('hero-heading').value = heroSection.content.heading || '';
+      document.getElementById('hero-subheading').value = heroSection.content.subheading || '';
+      document.getElementById('hero-button-text').value = heroSection.content.buttonText || '';
+      document.getElementById('hero-image').value = heroSection.content.image || '';
     }
 
-    if (data.about) {
-      document.getElementById('about-heading').value = data.about.title || '';
+    const aboutSection = sections.find(section => section.id === 'about');
+    if (aboutSection && aboutSection.content) {
+      document.getElementById('about-heading').value = aboutSection.content.heading || '';
 
       // Handle the about content in the textarea
-      if (data.about.paragraphs && Array.isArray(data.about.paragraphs)) {
+      if (aboutSection.content.paragraphs && Array.isArray(aboutSection.content.paragraphs)) {
         // Join paragraphs with newlines for the textarea
-        document.getElementById('about-content').value = data.about.paragraphs.join('\n\n');
-      } else if (data.about.content) {
-        document.getElementById('about-content').value = data.about.content;
+        document.getElementById('about-content').value = aboutSection.content.paragraphs.join('\n\n');
+      } else if (aboutSection.content.content) {
+        document.getElementById('about-content').value = aboutSection.content.content;
       }
 
-      document.getElementById('about-button-text').value = data.about.buttonText || '';
-      document.getElementById('about-image').value = data.about.imageUrl || '';
+      document.getElementById('about-button-text').value = aboutSection.content.buttonText || '';
+      document.getElementById('about-image').value = aboutSection.content.image || '';
     }
 
-    if (data.guides) {
-      document.getElementById('guides-heading').value = data.guides.title || '';
-      document.getElementById('guides-subheading').value = data.guides.description || '';
+    const guidesSection = sections.find(section => section.id === 'care-guides');
+    if (guidesSection && guidesSection.content) {
+      document.getElementById('guides-heading').value = guidesSection.content.heading || '';
+      document.getElementById('guides-subheading').value = guidesSection.content.subheading || '';
     }
+
+    // Populate section selector
+    populateSectionSelector(sections);
+  }
+
+  // Populate the section selector dropdown
+  function populateSectionSelector(sections) {
+    const sectionSelector = document.getElementById('section-selector');
+    sectionSelector.innerHTML = ''; // Clear existing options
+
+    // Add options for each section
+    sections.forEach(section => {
+      const option = document.createElement('option');
+      option.value = section.id;
+      option.textContent = section.title;
+      sectionSelector.appendChild(option);
+    });
+
+    // Trigger change event to show the first section
+    sectionSelector.dispatchEvent(new Event('change'));
   }
 
   // Default data for initial display
   function getDefaultData() {
     return {
-      hero: {
-        title: 'Bring life to your space with plants',
-        description: 'Learn how to care for your indoor plants with our expert guides and simple tips.',
-        buttonText: 'Get Started',
-        imageUrl:
-          'https://images.unsplash.com/photo-1463320898484-cdee8141c787?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
-      },
-      about: {
-        title: 'About Verdant',
-        content:
-          'We believe that everyone deserves to enjoy the beauty and benefits of plants, regardless of experience level. Our mission is to make plant care accessible, enjoyable, and rewarding.',
-        buttonText: 'Learn More',
-        imageUrl:
-          'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
-      },
-      guides: {
-        title: 'Essential Care Guides',
-        description: 'Everything you need to know to keep your plants thriving',
-      },
+      "sections": [
+        {
+          "id": "hero",
+          "title": "Hero Section",
+          "content": {
+            "heading": "Bring life to your space with plants",
+            "subheading": "Learn how to care for your indoor plants with our expert guides and simple tips.",
+            "buttonText": "Get Started",
+            "image": "https://images.unsplash.com/photo-1463320898484-cdee8141c787?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80"
+          }
+        },
+        {
+          "id": "about",
+          "title": "About Section",
+          "content": {
+            "heading": "About Verdant",
+            "paragraphs": [
+              "We believe that everyone deserves to enjoy the beauty and benefits of plants, regardless of experience level.",
+              "Our mission is to make plant care accessible, enjoyable, and rewarding."
+            ],
+            "buttonText": "Learn More",
+            "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80"
+          }
+        },
+        {
+          "id": "care-guides",
+          "title": "Care Guides Section",
+          "content": {
+            "heading": "Essential Care Guides",
+            "subheading": "Everything you need to know to keep your plants thriving",
+            "guides": []
+          }
+        },
+        {
+          "id": "newsletter",
+          "title": "Newsletter Section",
+          "content": {
+            "heading": "Join Our Plant Community",
+            "description": "Sign up for our newsletter to receive seasonal care tips, exclusive guides, and plant inspiration.",
+            "buttonText": "Subscribe",
+            "inputPlaceholder": "Your email address"
+          }
+        },
+        {
+          "id": "testimonials",
+          "title": "Testimonials Section",
+          "content": {
+            "heading": "What Our Community Says",
+            "subheading": "Hear from plant lovers who've transformed their spaces",
+            "testimonials": []
+          }
+        }
+      ]
     };
   }
 
   // Handle form submission
-  form.addEventListener('submit', function (event) {
+  form.addEventListener('submit', async function (event) {
     event.preventDefault();
 
-    // Create data object from form values
-    const formData = {
-      hero: {
-        title: document.getElementById('hero-heading').value,
-        description: document.getElementById('hero-subheading').value,
-        buttonText: document.getElementById('hero-button-text').value,
-        imageUrl: document.getElementById('hero-image').value,
-      },
-      about: {
-        title: document.getElementById('about-heading').value,
-        // Handle content collection based on your implementation
-        buttonText: document.getElementById('about-button-text').value,
-        imageUrl: document.getElementById('about-image').value,
-      },
-      guides: {
-        title: document.getElementById('guides-heading').value,
-        description: document.getElementById('guides-subheading').value,
-      },
-    };
+    // Get the current site data
+    let currentData;
+    try {
+      const response = await fetch('config/site.json');
+      currentData = await response.json();
+    } catch (error) {
+      console.error('Error loading current data:', error);
+      currentData = getDefaultData();
+    }
+
+    // Update the data with form values
+    const sections = currentData.sections || [];
+
+    // Update Hero section
+    const heroIndex = sections.findIndex(section => section.id === 'hero');
+    if (heroIndex >= 0) {
+      sections[heroIndex].content.heading = document.getElementById('hero-heading').value;
+      sections[heroIndex].content.subheading = document.getElementById('hero-subheading').value;
+      sections[heroIndex].content.buttonText = document.getElementById('hero-button-text').value;
+      sections[heroIndex].content.image = document.getElementById('hero-image').value;
+    }
+
+    // Update About section
+    const aboutIndex = sections.findIndex(section => section.id === 'about');
+    if (aboutIndex >= 0) {
+      sections[aboutIndex].content.heading = document.getElementById('about-heading').value;
+      sections[aboutIndex].content.paragraphs = document.getElementById('about-content').value.split('\n\n');
+      sections[aboutIndex].content.buttonText = document.getElementById('about-button-text').value;
+      sections[aboutIndex].content.image = document.getElementById('about-image').value;
+    }
+
+    // Update Guides section
+    const guidesIndex = sections.findIndex(section => section.id === 'care-guides');
+    if (guidesIndex >= 0) {
+      sections[guidesIndex].content.heading = document.getElementById('guides-heading').value;
+      sections[guidesIndex].content.subheading = document.getElementById('guides-subheading').value;
+    }
 
     // Display save confirmation
-    saveData(formData);
+    saveData({ sections });
   });
 
   // Simulate saving data to the server

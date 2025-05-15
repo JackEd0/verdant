@@ -1,4 +1,29 @@
 {
+    "navigation": {
+        "brand": "Verdant",
+        "items": [
+            {
+                "id": "nav-about",
+                "text": "About",
+                "href": "#about"
+            },
+            {
+                "id": "nav-care-guides",
+                "text": "Care Guides",
+                "href": "#care-guides"
+            },
+            {
+                "id": "nav-tips",
+                "text": "Expert Tips",
+                "href": "#tips"
+            },
+            {
+                "id": "nav-contact",
+                "text": "Contact",
+                "href": "#contact"
+            }
+        ]
+    },
     "sections": [
         {
             "id": "hero",

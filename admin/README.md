@@ -4,7 +4,7 @@ This project provides an admin interface for customizing the sections of the exi
 
 ## Project Structure
 
-```
+```text
 plant-care-admin
 ├── admin.html               # Admin interface for customization
 ├── assets
@@ -24,13 +24,13 @@ plant-care-admin
 1. **Clone the Repository**:
    Clone this repository to your local machine using:
 
-   ```
+   ```sh
    git clone <repository-url>
    ```
 
 2. **Navigate to the Project Directory**:
 
-   ```
+   ```sh
    cd plant-care-admin
    ```
 

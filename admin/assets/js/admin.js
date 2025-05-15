@@ -385,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Helper function to create image previews
   function previewImage(imageUrl, previewContainer) {
     if (!previewContainer) return;
-    console.log('Previewing image:', imageUrl);
+    // console.log('Previewing image:', imageUrl);
 
     if (imageUrl && imageUrl.trim()) {
       // Clear the container

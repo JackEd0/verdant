@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('customization-form');
   // Store the current site data globally
   let currentSiteData = {};
+  // Store the initial raw JSON value for comparison
+  let initialRawJsonValue = '';
 
   // Initialize image preview functionality
   initImagePreview();
@@ -15,8 +17,10 @@ document.addEventListener('DOMContentLoaded', function () {
       currentSiteData = data;
       populateForm(data);
 
-      // Populate the raw JSON editor
-      document.getElementById('raw-json-editor').value = JSON.stringify(data, null, 2);
+      // Populate the raw JSON editor and store initial value
+      const jsonString = JSON.stringify(data, null, 2);
+      document.getElementById('raw-json-editor').value = jsonString;
+      initialRawJsonValue = jsonString;
     })
     .catch((error) => {
       console.error('Error loading section data:', error);
@@ -25,8 +29,10 @@ document.addEventListener('DOMContentLoaded', function () {
       currentSiteData = defaultData;
       populateForm(defaultData);
 
-      // Populate the raw JSON editor with default data
-      document.getElementById('raw-json-editor').value = JSON.stringify(defaultData, null, 2);
+      // Populate the raw JSON editor with default data and store initial value
+      const jsonString = JSON.stringify(defaultData, null, 2);
+      document.getElementById('raw-json-editor').value = jsonString;
+      initialRawJsonValue = jsonString;
     });
 
   // Populate form with data
@@ -260,6 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (guide.title) clone.querySelector('.guide-title').value = guide.title;
     if (guide.description) clone.querySelector('.guide-description').value = guide.description;
     if (guide.image) clone.querySelector('.guide-image').value = guide.image;
+    if (guide.selector) clone.querySelector('.guide-selector').value = guide.selector;
 
     guidesList.appendChild(clone);
 
@@ -501,9 +508,9 @@ document.addEventListener('DOMContentLoaded', function () {
   form.addEventListener('submit', async function (event) {
     event.preventDefault();
 
-    // Check if the raw JSON editor has been changed
+    // Check if the raw JSON editor has been changed compared to the initial value
     const rawJsonEditor = document.getElementById('raw-json-editor');
-    if (rawJsonEditor.value) {
+    if (rawJsonEditor.value && rawJsonEditor.value !== initialRawJsonValue) {
       try {
         // Parse and validate the JSON
         const updatedData = JSON.parse(rawJsonEditor.value);
@@ -642,7 +649,8 @@ document.addEventListener('DOMContentLoaded', function () {
           title,
           description,
           image,
-          selector: `#guide-${title.toLowerCase().replace(/\s+/g, '-')}`
+          // selector: `#guide-${title.toLowerCase().replace(/\s+/g, '-')}`
+          selector: item.querySelector('.guide-selector').value
         });
       }
     });
@@ -692,8 +700,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update the global data reference
     currentSiteData = data;
 
-    // Update the raw JSON editor
-    document.getElementById('raw-json-editor').value = JSON.stringify(data, null, 2);
+    // Update the raw JSON editor and the initial value for future comparisons
+    const jsonString = JSON.stringify(data, null, 2);
+    document.getElementById('raw-json-editor').value = jsonString;
+    initialRawJsonValue = jsonString;
 
     // Send data to the server
     fetch('save-config.php', {

@@ -200,7 +200,11 @@ function updateCareGuidesSection(content) {
         content.guides.forEach((guide, index) => {
             // Guide elements have IDs like guide-watering, guide-light, guide-soil
             const guideId = guide.selector || `#guide-${guide.title.toLowerCase().replace(/\s+/g, '-')}`;
-            const guideElement = document.querySelector(guideId);
+            // Ensure special characters in CSS selectors are properly escaped
+            // const escapedGuideId = guideId.replace(/([!"#$%&'()*+,./:;<=>?@[\]^`{|}~])/g, '\\$1');
+            const escapedGuideId = guideId.replace('#', '');
+            // console.log(guideId, escapedGuideId, guideId.includes('&'));
+            const guideElement = guideId.includes('&') ? document.querySelector(`[id="${escapedGuideId}"]`) : document.querySelector(guideId);
 
             if (guideElement) {
                 // Update title

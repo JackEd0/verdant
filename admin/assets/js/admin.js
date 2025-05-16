@@ -747,7 +747,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const downloadLink = document.createElement('a');
     downloadLink.href = url;
-    downloadLink.download = 'site-config.json';
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    downloadLink.download = `site-config-${formattedDate}.json`;
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);

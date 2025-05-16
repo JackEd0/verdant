@@ -412,10 +412,13 @@
             <!-- Preview Section -->
             <div id="preview-section-container" class="lg:w-1/2">
                 <div class="bg-white rounded-lg shadow-md p-6 h-full">
-                    <h2 class="text-xl font-medium mb-6 pb-2 border-b border-gray-200">Live Preview</h2>
+                    <h2 class="text-xl font-medium mb-6 pb-2 border-b border-gray-200">
+                        Live Preview
+                        <button type="button" class="ml-2 p-1 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-600 refresh-preview-btn" title="Refresh Preview"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg></button>
+                    </h2>
 
                     <div id="preview-section" class="overflow-auto h-screen max-h-[80vh] border border-gray-200 rounded-md">
-                        <iframe src="http://verdant.test/" frameborder="0" class="w-full h-full"></iframe>
+                        <iframe id="preview-iframe" src="http://verdant.test/" frameborder="0" class="w-full h-full"></iframe>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initialize image preview functionality
   initImagePreview();
 
+  refreshPreview();
+
   // Load existing site data
   fetch('config/site.json')
     .then((response) => response.json())
@@ -715,16 +717,24 @@ document.addEventListener('DOMContentLoaded', function () {
       showStatusMessage('Changes saved successfully!');
 
       // Refresh the preview iframe
-      const iframe = document.querySelector('#preview-section iframe');
-      if (iframe) {
-        iframe.src = iframe.src;
-      }
+      refreshPreview();
     })
     .catch(error => {
       console.error('Error:', error);
       showStatusMessage('Error saving changes. See console for details.', 'error');
     });
   }
+
+  // Function to refresh the iframe with no cache
+  function refreshPreview() {
+    const iframe = document.getElementById('preview-iframe');
+    const currentSrc = iframe.src.split('?')[0]; // Remove any existing query parameters
+    iframe.src = currentSrc + '?t=' + new Date().getTime(); // Add timestamp as query parameter
+  }
+
+  document.querySelector('.refresh-preview-btn').addEventListener('click', function() {
+    refreshPreview();
+  });
 
   // Download the JSON configuration
   document.getElementById('download-json-btn').addEventListener('click', function() {
